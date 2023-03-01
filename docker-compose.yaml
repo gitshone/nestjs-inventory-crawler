@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  api:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: 'yarn run start:dev --debug 0.0.0.0:${APP_DEBUG_PORT}'
+    ports:
+      - '${APP_OUT_PORT}:${APP_PORT}'
+      - '${APP_DEBUG_OUT_PORT}:${APP_DEBUG_PORT}'
+    volumes:
+      - ./src:/app/src
+      - ./test:/app/test
+    depends_on:
+      - redis
+
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - '6378:6379'
